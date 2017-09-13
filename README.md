@@ -54,4 +54,15 @@ netsh interface portproxy delete v4tov4 listenport=80 listenaddress=127.0.0.1
 
 ### Linux
 
-**TODO**
+First enable port redirection:
+```
+echo "1" > /proc/sys/net/ipv4/ip_forward
+```
+
+Then add port redirect:
+```
+iptables -t nat -A PREROUTING -s 127.0.0.1 -p tcp --dport 80 -j REDIRECT --to 8080`
+iptables -t nat -A OUTPUT -s 127.0.0.1 -p tcp --dport 80 -j REDIRECT --to 8080`
+```
+
+To remove simply replace in the previous command the `-D` switch instead of the `-A` switch.
